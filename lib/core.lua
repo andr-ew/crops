@@ -110,7 +110,7 @@ crops.connect_grid = function(render, g, fps)
 end
 
 -- connect an arc device (a). overwrites g.delta
-crops.connect_grid = function(render, a, fps)
+crops.connect_arc = function(render, a, fps)
     fps = fps or 120
     local name = 'arc'
     local obj = a
