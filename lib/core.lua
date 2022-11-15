@@ -2,11 +2,11 @@
 
 -- global state table. 
 --     these values are updated each time crops redraws a device or receives input. 
---     routines reference these values to know when and how to act
+--     render routines reference these values to know if and how to act
 crops = {
     args = {},           --list of arguments from any device input callback
     device = nil,        --name of device currently being processed
-    object = nil,        --device object, if relevant (g, a, etc)
+    handler = nil,        --device handler, if relevant (g, a, etc)
     mode = nil,          --render mode name, either 'input' or 'redraw'
     dirty = {            --table of dirty flags for each output device
         grid = true,
@@ -22,7 +22,7 @@ crops.connect_enc = function(render)
     function enc(n, d)
         crops.args = { n, d }
         crops.device = 'enc'
-        crops.object = nil
+        crops.handler = nil
         crops.mode = 'input'
 
         render()
@@ -34,7 +34,7 @@ crops.connect_key = function(render)
     function key(n, z)
         crops.args = { n, z }
         crops.device = 'key'
-        crops.object = nil
+        crops.handler = nil
         crops.mode = 'input'
 
         render()
@@ -50,7 +50,7 @@ crops.connect_screen = function(render, fps)
 
         crops.args = nil
         crops.device = name
-        crops.object = nil
+        crops.handler = nil
         crops.mode = 'redraw'
         render()
 
@@ -74,26 +74,26 @@ end
 crops.connect_grid = function(render, g, fps)
     fps = fps or 30
     local name = 'grid'
-    local obj = g
+    local h = g
 
-    obj.key = function(x, y, z)
+    h.key = function(x, y, z)
         crops.args = { x, y, z }
         crops.device = name
-        crops.object = obj
+        crops.handler = h
         crops.mode = 'input'
         render()
     end
 
     local redraw_device = function()
-        obj:all(0)
+        h:all(0)
 
         crops.args = nil
         crops.device = name
-        crops.object = obj
+        crops.handler = h
         crops.mode = 'redraw'
         render()
 
-        obj:refresh()
+        h:refresh()
     end
 
     local cl = clock.run(function()
@@ -113,33 +113,33 @@ end
 crops.connect_arc = function(render, a, fps)
     fps = fps or 120
     local name = 'arc'
-    local obj = a
+    local h = a
 
-    obj.delta = function(n, d)
+    h.delta = function(n, d)
         crops.args = { n, d }
         crops.device = name
-        crops.object = obj
+        crops.handler = h
         crops.mode = 'input'
         render()
     end
-    obj.key = function(n, z) --2011 arc encoder pushbutton input
+    h.key = function(n, z) --2011 arc encoder pushbutton input
         crops.args = { n, z }
         crops.device = 'arc_key'
-        crops.object = obj
+        crops.handler = h
         crops.mode = 'input'
         render()
     end
 
     local redraw_device = function()
-        obj:all(0)
+        h:all(0)
 
         crops.args = nil
         crops.device = name
-        crops.object = obj
+        crops.handler = h
         crops.mode = 'redraw'
         render()
 
-        obj:refresh()
+        h:refresh()
     end
 
     local cl = clock.run(function()
@@ -153,4 +153,23 @@ crops.connect_arc = function(render, a, fps)
     end)
 
     return redraw_device, cl
+end
+
+--special functions used by routines to interact with the state prop
+
+function crops.get_state(state)
+    if type(state) == 'table' then return state[1] end
+end
+function crops.set_state(state, value)
+    if type(state) == 'table' and type(state[2]) == 'function' then
+        local args = {} --args sent to the state setter function
+
+        for i,v in ipairs(state) do 
+            --additional values in state tab sent as args, before value
+            if i > 2 then table.insert(args, v) end
+        end
+        table.insert(args, value)
+
+        state[2](table.unpack(args))
+    end
 end
