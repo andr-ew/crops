@@ -17,41 +17,41 @@ crops = {
 
 -- connect norns interface elements. overwrites global key, enc, redraw callbacks
 
-nest.connect_enc = function(render)
+crops.connect_enc = function(render)
 
     function enc(n, d)
-        nest.args = { n, d }
-        nest.device = 'enc'
-        nest.object = nil
-        nest.mode = 'input'
+        crops.args = { n, d }
+        crops.device = 'enc'
+        crops.object = nil
+        crops.mode = 'input'
 
         render()
     end
 
 end
-nest.connect_key = function(render)
+crops.connect_key = function(render)
 
     function key(n, z)
-        nest.args = { n, z }
-        nest.device = 'key'
-        nest.object = nil
-        nest.mode = 'input'
+        crops.args = { n, z }
+        crops.device = 'key'
+        crops.object = nil
+        crops.mode = 'input'
 
         render()
     end
 
 end
-nest.connect_screen = function(render, fps)
+crops.connect_screen = function(render, fps)
     fps = fps or 30
     local name = 'screen'
 
     function redraw()
         screen.clear()
 
-        nest.args = nil
-        nest.device = name
-        nest.object = nil
-        nest.mode = 'redraw'
+        crops.args = nil
+        crops.device = name
+        crops.object = nil
+        crops.mode = 'redraw'
         render()
 
         screen.update()
@@ -60,8 +60,8 @@ nest.connect_screen = function(render, fps)
     local cl = clock.run(function()
         while true do
             clock.sleep(1/fps)
-            if nest.dirty[name] then
-                nest.dirty[name] = false
+            if crops.dirty[name] then
+                crops.dirty[name] = false
                 redraw()
             end
         end
@@ -71,26 +71,26 @@ nest.connect_screen = function(render, fps)
 end
 
 -- connect a grid device (g). overwrites g.key
-nest.connect_grid = function(render, g, fps)
+crops.connect_grid = function(render, g, fps)
     fps = fps or 30
     local name = 'grid'
     local obj = g
 
     obj.key = function(x, y, z)
-        nest.args = { x, y, z }
-        nest.device = name
-        nest.object = obj
-        nest.mode = 'input'
+        crops.args = { x, y, z }
+        crops.device = name
+        crops.object = obj
+        crops.mode = 'input'
         render()
     end
 
     local redraw_device = function()
         obj:all(0)
 
-        nest.args = nil
-        nest.device = name
-        nest.object = obj
-        nest.mode = 'redraw'
+        crops.args = nil
+        crops.device = name
+        crops.object = obj
+        crops.mode = 'redraw'
         render()
 
         obj:refresh()
@@ -99,8 +99,8 @@ nest.connect_grid = function(render, g, fps)
     local cl = clock.run(function()
         while true do
             clock.sleep(1/fps)
-            if nest.dirty[name] then
-                nest.dirty[name] = false
+            if crops.dirty[name] then
+                crops.dirty[name] = false
                 redraw_device()
             end
         end
@@ -110,33 +110,33 @@ nest.connect_grid = function(render, g, fps)
 end
 
 -- connect an arc device (a). overwrites g.delta
-nest.connect_grid = function(render, a, fps)
+crops.connect_grid = function(render, a, fps)
     fps = fps or 120
     local name = 'arc'
     local obj = a
 
     obj.delta = function(n, d)
-        nest.args = { n, d }
-        nest.device = name
-        nest.object = obj
-        nest.mode = 'input'
+        crops.args = { n, d }
+        crops.device = name
+        crops.object = obj
+        crops.mode = 'input'
         render()
     end
     obj.key = function(n, z) --2011 arc encoder pushbutton input
-        nest.args = { n, z }
-        nest.device = 'arc_key'
-        nest.object = obj
-        nest.mode = 'input'
+        crops.args = { n, z }
+        crops.device = 'arc_key'
+        crops.object = obj
+        crops.mode = 'input'
         render()
     end
 
     local redraw_device = function()
         obj:all(0)
 
-        nest.args = nil
-        nest.device = name
-        nest.object = obj
-        nest.mode = 'redraw'
+        crops.args = nil
+        crops.device = name
+        crops.object = obj
+        crops.mode = 'redraw'
         render()
 
         obj:refresh()
@@ -145,8 +145,8 @@ nest.connect_grid = function(render, a, fps)
     local cl = clock.run(function()
         while true do
             clock.sleep(1/fps)
-            if nest.dirty[name] then
-                nest.dirty[name] = false
+            if crops.dirty[name] then
+                crops.dirty[name] = false
                 redraw_device()
             end
         end
