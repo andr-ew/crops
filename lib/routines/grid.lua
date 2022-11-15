@@ -136,4 +136,29 @@ do
     end
 end
 
+-- fill. just display a set brightness level.
+do
+    local defaults = {
+        state = {0},
+        x = 0,                   --x position of the component
+        y = 0,                   --y position of the component
+        level = 15               --brightness level.
+    }
+    defaults.__index = defaults
+
+    function _grid.fill(props)
+        if crops.device == 'grid' then
+            setmetatable(props, defaults)
+
+            if crops.mode == 'redraw' then
+                local g = crops.handler
+
+                local lvl = props.level
+
+                if lvl>0 then g:led(props.x, props.y, lvl) end
+            end
+        end
+    end
+end
+
 return _grid
