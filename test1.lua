@@ -7,6 +7,8 @@ local function App()
     local mom = 0
     local trig = 0
     local tog = 0
+
+    local moms = {}
     
     return function()
         _grid.momentary{
@@ -48,10 +50,18 @@ local function App()
             },
         }
 
-        _grid.fills{
+        _grid.momentaries{
             x = 9,
             y = 4,
-            level = 15,
+            level = { 4, 15 },
+            state = { 
+                moms, 
+                function(v) 
+                    moms = v 
+                    print('momentaries')
+                    tab.print(moms)
+                end
+            },
             size = 6,
             wrap = 4,
             flow = 'right',

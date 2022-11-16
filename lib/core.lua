@@ -158,7 +158,7 @@ end
 --special functions used by routines to interact with the state prop
 
 function crops.get_state(state)
-    if type(state) == 'table' then return state[1] end
+    return state[1]
 end
 function crops.set_state(state, value)
     if type(state) == 'table' and type(state[2]) == 'function' then
@@ -169,6 +169,28 @@ function crops.set_state(state, value)
             if i > 2 then table.insert(args, v) end
         end
         table.insert(args, value)
+
+        state[2](table.unpack(args))
+    end
+end
+function crops.get_state_at(state, i)
+    return state[1][i]
+end
+function crops.set_state_at(state, idx, value)
+    if type(state) == 'table' and type(state[2]) == 'function' then
+        local args = {} --args sent to the state setter function
+
+        for i,v in ipairs(state) do 
+            --additional values in state tab sent as args, before value
+            if i > 2 then table.insert(args, v) end
+        end
+
+        local old = state[1]
+        local new = {}
+        for i,v in ipairs(old) do new[i] = v end
+        new[idx] = value
+
+        table.insert(args, new)
 
         state[2](table.unpack(args))
     end
