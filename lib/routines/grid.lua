@@ -184,6 +184,8 @@ local function index_to_xy(props, n)
 
     return x, y
 end
+
+--return the index of the key, based on x & y position. returns nil when out of bounds
 local function xy_to_index(props, x, y)
     local flow, flow_wrap = props.flow, props.flow_wrap
 
