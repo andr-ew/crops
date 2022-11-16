@@ -47,6 +47,17 @@ local function App()
                 end 
             },
         }
+
+        _grid.fills{
+            x = 9,
+            y = 4,
+            level = 15,
+            size = 6,
+            wrap = 4,
+            flow = 'right',
+            flow_wrap = 'down',
+            padding = 0
+        }
     end
 end
 

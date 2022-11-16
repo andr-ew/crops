@@ -7,8 +7,8 @@ do
     --default values for every valid prop.
     local defaults = {
         state = {0},
-        x = 0,                   --x position of the component
-        y = 0,                   --y position of the component
+        x = 1,                   --x position of the component
+        y = 1,                   --y position of the component
         level = { 0, 15 },       --brightness levels. expects a table of 2 ints 0-15
     }
     defaults.__index = defaults
@@ -44,8 +44,8 @@ end
 do
     local defaults = {
         state = {0},
-        x = 0,                   --x position of the component
-        y = 0,                   --y position of the component
+        x = 1,                   --x position of the component
+        y = 1,                   --y position of the component
         level = { 0, 15 },       --brightness levels. expects a table of 2 ints 0-15
         t = 0.2,                 --trigger time
         edge = 'rising',         --the input edge that causes the trigger. 'rising' or 'falling'.
@@ -93,8 +93,8 @@ end
 do
     local defaults = {
         state = {0},
-        x = 0,                   --x position of the component
-        y = 0,                   --y position of the component
+        x = 1,                   --x position of the component
+        y = 1,                   --y position of the component
         level = { 0, 15 },       --brightness levels. 
                                  --    will cycle forward to the next level on each keypress .
                                  --    length can be 2 or more.
@@ -140,8 +140,8 @@ end
 do
     local defaults = {
         state = {0},
-        x = 0,                   --x position of the component
-        y = 0,                   --y position of the component
+        x = 1,                   --x position of the component
+        y = 1,                   --y position of the component
         level = 15               --brightness level.
     }
     defaults.__index = defaults
@@ -156,6 +156,67 @@ do
                 local lvl = props.level
 
                 if lvl>0 then g:led(props.x, props.y, lvl) end
+            end
+        end
+    end
+end
+
+--return the x & y position of the Nth key, based on props
+local function index_to_xy(props, n)
+    local flow, flow_wrap = props.flow, props.flow_wrap
+
+    local flows_along_x = (flow=='left') or (flow=='right')
+    local flows_incrimentally = {
+        main = (flow=='right') or (flow=='down'),
+        cross = (flow_wrap=='right') or (flow_wrap=='down'),
+    }
+    local axis_x = flows_along_x and 'main' or 'cross'
+    local axis_y = flows_along_x and 'cross' or 'main'
+
+    local distance = n - 1 + props.padding
+    local offset = {
+        main = distance % props.wrap,
+        cross = distance // props.wrap,
+    }
+
+    local x = flows_incrimentally[axis_x] and props.x + offset[axis_x] or props.x - offset[axis_x]
+    local y = flows_incrimentally[axis_y] and props.y + offset[axis_y] or props.y - offset[axis_y]
+
+    return x, y
+end
+local function xy_to_index(props, x, y)
+
+end
+
+-- fills. display a set brightness level (multiple keys).
+do
+    local defaults = {
+        state = {0},
+        x = 1,                   --x position of the component
+        y = 1,                   --y position of the component
+        level = 15,              --brightness level.
+        size = 128,              --total number of keys
+        wrap = 16,               --wrap to the next row/column every n keys
+        flow = 'right',          --primary direction to flow: 'up', 'down', 'left', 'right'
+        flow_wrap = 'down',      --direction to flow when wrapping. must be perpendicular to flow
+        padding = 0,             --add blank spaces before the first key
+    }
+    defaults.__index = defaults
+
+    function _grid.fills(props)
+        if crops.device == 'grid' then
+            setmetatable(props, defaults)
+
+            if crops.mode == 'redraw' then
+                local g = crops.handler
+
+                local lvl = props.level
+
+                for i = 1, props.size do
+                    local x, y = index_to_xy(props, i)
+
+                    if lvl>0 then g:led(x, y, lvl) end
+                end
             end
         end
     end
