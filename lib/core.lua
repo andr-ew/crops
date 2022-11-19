@@ -15,8 +15,7 @@ crops = {
     }
 }
 
--- connect norns interface elements. overwrites global key, enc, redraw callbacks
-
+-- connect norns interface elements. overwrites global enc, key, redraw callbacks, respectively
 crops.connect_enc = function(render)
 
     function enc(n, d)
@@ -156,7 +155,6 @@ crops.connect_arc = function(render, a, fps)
 end
 
 --special functions used by routines to interact with the state prop
-
 function crops.get_state(state)
     return state[1]
 end

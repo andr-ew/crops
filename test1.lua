@@ -8,8 +8,9 @@ local function App()
     local trig = 0
     local tog = 0
 
-    local moms = {}
     local num = 1
+    local moms = {}
+    local togs = {}
     
     return function()
         _grid.momentary{
@@ -25,9 +26,23 @@ local function App()
             },
         }
 
-        _grid.trigger{
+        _grid.toggle{
             x = 2,
             y = 5,
+            levels = { 4, 15 },
+            edge = 'rising',
+            state = { 
+                tog, 
+                function(v) 
+                    tog = v 
+                    print('toggle', tog)
+                end 
+            },
+        }
+
+        _grid.trigger{
+            x = 2,
+            y = 7,
             levels = { 4, 15 },
             state = { 
                 trig, 
@@ -38,19 +53,6 @@ local function App()
             },
         }
         
-        _grid.toggle{
-            x = 2,
-            y = 7,
-            levels = { 4, 15 },
-            state = { 
-                tog, 
-                function(v) 
-                    tog = v 
-                    print('toggle', tog)
-                end 
-            },
-        }
-
         _grid.number{
             x = 4,
             y = 1,
@@ -89,6 +91,25 @@ local function App()
             padding = 0
         }
 
+        _grid.toggles{
+            x = 4,
+            y = 5,
+            levels = { 4, 15 },
+            edge = 'rising',
+            state = { 
+                togs, 
+                function(v) 
+                    togs = v 
+                    print('toggles')
+                    tab.print(togs)
+                end
+            },
+            size = 7,
+            wrap = nil,
+            flow = 'right',
+            flow_wrap = 'down',
+            padding = 0
+        }
     end
 end
 
