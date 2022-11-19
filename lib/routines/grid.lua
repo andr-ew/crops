@@ -9,7 +9,7 @@ do
         state = {0},
         x = 1,                   --x position of the component
         y = 1,                   --y position of the component
-        level = { 0, 15 },       --brightness levels. expects a table of 2 ints 0-15
+        levels = { 0, 15 },      --brightness levels. expects a table of 2 ints 0-15
     }
     defaults.__index = defaults
 
@@ -32,7 +32,7 @@ do
                 local g = crops.handler --assign the device handler to a local var
                 local v = crops.get_state(props.state) or 0 --get the value from the state prop
 
-                local lvl = props.level[v + 1] --get the correct brightness based on the level prop
+                local lvl = props.levels[v + 1] --get the correct brightness based on the level prop
 
                 if lvl>0 then g:led(props.x, props.y, lvl) end --draw the component
             end
@@ -46,7 +46,7 @@ do
         state = {0},
         x = 1,                   --x position of the component
         y = 1,                   --y position of the component
-        level = { 0, 15 },       --brightness levels. expects a table of 2 ints 0-15
+        levels = { 0, 15 },      --brightness levels. expects a table of 2 ints 0-15
         t = 0.2,                 --trigger time
         edge = 'rising',         --the input edge that causes the trigger. 'rising' or 'falling'.
         input = function(z) end, --input callback, passes key held state on any input
@@ -81,7 +81,7 @@ do
                 local g = crops.handler
                 local v = crops.get_state(props.state) or 0
 
-                local lvl = props.level[v + 1]
+                local lvl = props.levels[v + 1]
 
                 if lvl>0 then g:led(props.x, props.y, lvl) end
             end
@@ -89,13 +89,13 @@ do
     end
 end
 
--- toggle. value cycles forward from 0-n on keypress. set number of levels with `level`.
+-- toggle. value cycles forward from 0-n on keypress. set number of levels with `levels`.
 do
     local defaults = {
         state = {0},
         x = 1,                   --x position of the component
         y = 1,                   --y position of the component
-        level = { 0, 15 },       --brightness levels. 
+        levels = { 0, 15 },      --brightness levels. 
                                  --    will cycle forward to the next level on each keypress .
                                  --    length can be 2 or more.
         edge = 'rising',         --the input edge that causes the toggle. 'rising' or 'falling'.
@@ -118,7 +118,7 @@ do
                         or (z == 0 and props.edge == 'falling')
                     then
                         local v = crops.get_state(props.state)
-                        v = (v + 1) % #props.level
+                        v = (v + 1) % #props.levels
 
                         crops.dirty.grid = true
                         crops.set_state(props.state, v)
@@ -128,7 +128,7 @@ do
                 local g = crops.handler
                 local v = crops.get_state(props.state)
 
-                local lvl = props.level[v + 1]
+                local lvl = props.levels[v + 1]
 
                 if lvl>0 then g:led(props.x, props.y, lvl) end
             end
@@ -161,7 +161,7 @@ do
     end
 end
 
---return the x & y position of the Nth key, based on props
+--utility: return the x & y position of the Nth key, based on props
 local function index_to_xy(props, n)
     local flow, flow_wrap = props.flow, props.flow_wrap
 
@@ -185,7 +185,7 @@ local function index_to_xy(props, n)
     return x, y
 end
 
---return the index of the key, based on x & y position. returns nil when out of bounds
+--utility: return the index of the key, based on x & y position. returns nil when out of bounds
 local function xy_to_index(props, x, y)
     local flow, flow_wrap = props.flow, props.flow_wrap
 
@@ -259,10 +259,10 @@ end
 do
     --default values for every valid prop.
     local defaults = {
-        state = {0},
+        state = {{}},
         x = 1,                   --x position of the component
         y = 1,                   --y position of the component
-        level = { 0, 15 },       --brightness levels. expects a table of 2 ints 0-15
+        levels = { 0, 15 },      --brightness levels. expects a table of 2 ints 0-15
         size = 128,              --total number of keys
         wrap = 16,               --wrap to the next row/column every n keys
         flow = 'right',          --primary direction to flow: 'up', 'down', 'left', 'right'
@@ -290,13 +290,67 @@ do
 
                 for i = 1, props.size do
                     local v = crops.get_state_at(props.state, i) or 0
-                    local lvl = props.level[v + 1] 
+                    local lvl = props.levels[v + 1] 
 
                     local x, y = index_to_xy(props, i)
 
                     if lvl>0 then g:led(x, y, lvl) end
                 end
+            end
+        end
+    end
+end
 
+-- number. select a number 1-`size` across `size` keys.
+do
+    --default values for every valid prop.
+    local defaults = {
+        state = {1},
+        x = 1,                      --x position of the component
+        y = 1,                      --y position of the component
+        edge = 'rising',            --input edge sensitivity. 'rising' or 'falling'.
+        input = function(n, z) end, --input callback, passes last key state on any input
+        levels = { 0, 15 },         --brightness levels. expects a table of 2 ints 0-15
+        size = 128,                 --total number of keys
+        wrap = 16,                  --wrap to the next row/column every n keys
+        flow = 'right',             --primary direction to flow: 'up', 'down', 'left', 'right'
+        flow_wrap = 'down',         --direction to flow when wrapping. must be perpendicular to flow
+        padding = 0,                --add blank spaces before the first key
+    }
+    defaults.__index = defaults
+
+    function _grid.number(props)
+        if crops.device == 'grid' then 
+            setmetatable(props, defaults) 
+
+            if crops.mode == 'input' then 
+                local x, y, z = table.unpack(crops.args) 
+                local n = xy_to_index(props, x, y)
+
+                if n then 
+                    props.input(n, z)
+
+                    if
+                        (z == 1 and props.edge == 'rising')
+                        or (z == 0 and props.edge == 'falling')
+                    then
+                        local v = n
+
+                        crops.dirty.grid = true 
+                        crops.set_state(props.state, v) 
+                    end
+                end
+            elseif crops.mode == 'redraw' then 
+                local g = crops.handler 
+
+                local v = crops.get_state(props.state)
+                for i = 1, props.size do
+                    local lvl = props.levels[(i == v) and 2 or 1] 
+
+                    local x, y = index_to_xy(props, i)
+
+                    if lvl>0 then g:led(x, y, lvl) end
+                end
             end
         end
     end

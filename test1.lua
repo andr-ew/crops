@@ -9,12 +9,13 @@ local function App()
     local tog = 0
 
     local moms = {}
+    local num = 1
     
     return function()
         _grid.momentary{
             x = 2, 
-            y = 2,
-            level = { 4, 15 },
+            y = 3,
+            levels = { 4, 15 },
             state = { 
                 mom, 
                 function(v) 
@@ -26,8 +27,8 @@ local function App()
 
         _grid.trigger{
             x = 2,
-            y = 4,
-            level = { 4, 15 },
+            y = 5,
+            levels = { 4, 15 },
             state = { 
                 trig, 
                 function(v) 
@@ -39,8 +40,8 @@ local function App()
         
         _grid.toggle{
             x = 2,
-            y = 6,
-            level = { 4, 15 },
+            y = 7,
+            levels = { 4, 15 },
             state = { 
                 tog, 
                 function(v) 
@@ -50,10 +51,29 @@ local function App()
             },
         }
 
+        _grid.number{
+            x = 4,
+            y = 1,
+            edge = 'rising',
+            levels = { 4, 15 },
+            state = { 
+                num, 
+                function(v) 
+                    num = v 
+                    print('number', num)
+                end
+            },
+            size = 7,
+            wrap = nil,
+            flow = 'right',
+            flow_wrap = 'down',
+            padding = 0
+        }
+
         _grid.momentaries{
-            x = 9,
-            y = 4,
-            level = { 4, 15 },
+            x = 4,
+            y = 3,
+            levels = { 4, 15 },
             state = { 
                 moms, 
                 function(v) 
@@ -62,12 +82,13 @@ local function App()
                     tab.print(moms)
                 end
             },
-            size = 6,
-            wrap = 4,
+            size = 7,
+            wrap = nil,
             flow = 'right',
             flow_wrap = 'down',
             padding = 0
         }
+
     end
 end
 

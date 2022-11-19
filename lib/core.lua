@@ -6,7 +6,7 @@
 crops = {
     args = {},           --list of arguments from any device input callback
     device = nil,        --name of device currently being processed
-    handler = nil,        --device handler, if relevant (g, a, etc)
+    handler = nil,       --device handler, if relevant (g, a, etc)
     mode = nil,          --render mode name, either 'input' or 'redraw'
     dirty = {            --table of dirty flags for each output device
         grid = true,
@@ -161,37 +161,33 @@ function crops.get_state(state)
     return state[1]
 end
 function crops.set_state(state, value)
-    if type(state) == 'table' and type(state[2]) == 'function' then
-        local args = {} --args sent to the state setter function
+    local args = {} --args sent to the state setter function
 
-        for i,v in ipairs(state) do 
-            --additional values in state tab sent as args, before value
-            if i > 2 then table.insert(args, v) end
-        end
-        table.insert(args, value)
-
-        state[2](table.unpack(args))
+    for i,v in ipairs(state) do 
+        --additional values in state tab sent as args, before value
+        if i > 2 then table.insert(args, v) end
     end
+    table.insert(args, value)
+
+    state[2](table.unpack(args))
 end
 function crops.get_state_at(state, i)
     return state[1][i]
 end
 function crops.set_state_at(state, idx, value)
-    if type(state) == 'table' and type(state[2]) == 'function' then
-        local args = {} --args sent to the state setter function
+    local args = {} --args sent to the state setter function
 
-        for i,v in ipairs(state) do 
-            --additional values in state tab sent as args, before value
-            if i > 2 then table.insert(args, v) end
-        end
-
-        local old = state[1]
-        local new = {}
-        for i,v in ipairs(old) do new[i] = v end
-        new[idx] = value
-
-        table.insert(args, new)
-
-        state[2](table.unpack(args))
+    for i,v in ipairs(state) do 
+        --additional values in state tab sent as args, before value
+        if i > 2 then table.insert(args, v) end
     end
+
+    local old = state[1]
+    local new = {}
+    for i,v in pairs(old) do new[i] = v end
+    new[idx] = value
+
+    table.insert(args, new)
+
+    state[2](table.unpack(args))
 end
