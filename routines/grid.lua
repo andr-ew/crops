@@ -138,10 +138,9 @@ do
     end
 end
 
--- fill. just display a set brightness level.
+-- fill. display a set brightness level.
 do
     local defaults = {
-        state = {0},
         x = 1,                   --x position of the component
         y = 1,                   --y position of the component
         level = 15               --brightness level.
