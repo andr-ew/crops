@@ -188,7 +188,7 @@ do
     end
 end
 
---option. integer number + 'tab' display
+--option. integer number + 'tab' display. resulting value must be rounded down (e.g. v//1)
 do
     local defaults = {
         state = {1},
