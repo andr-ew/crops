@@ -64,7 +64,7 @@ do
     end
 end
 
--- number. decimal number + 360 indicator. one full rotation of of the indicator is equal to the value of cycle.
+--number. decimal number + 360 indicator. one full rotation of of the indicator is equal to the value of cycle.
 do
     local defaults = {
         state = {0},
@@ -137,6 +137,7 @@ do
         x = { 42, 24 },             --start & endpoint led indices. table of 2 ints 1-64
         levels = { 0, 4, 15 },      --brightness levels, table of three ints 0-15
                                     --    (levels: background, fill, indicator)
+        sensitivity = 1,            --input sensitivity / incriment for each enc delta
         controlspec = cs.new(),     --all other properties detirmined by the controlspec
     }
     defaults.__index = defaults
@@ -150,7 +151,9 @@ do
 
                 if n == props.n then
                     local old = crops.get_state(props.state) or 0
-                    local v = props.controlspec:unmap(old) + (d * props.controlspec.quantum)
+                    local v = props.controlspec:unmap(old) + (
+                        d * props.controlspec.quantum * props.sensitivity
+                    )
 
                     if props.controlspec.wrap then
                         while v > 1 do v = v - 1 end
