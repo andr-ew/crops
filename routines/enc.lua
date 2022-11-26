@@ -57,7 +57,6 @@ do
  
                     v = util.clamp(v, min, max)
                     if old ~= v then
-                        crops.dirty.enc = true
                         crops.set_state(props.state, v)
                     end
                 end
@@ -95,7 +94,6 @@ do
                     
                     v = props.controlspec:map(util.clamp(v, 0, 1))
                     if old ~= v then
-                        crops.dirty.enc = true
                         crops.set_state(props.state, v)
                     end
                 end

@@ -98,7 +98,7 @@ do
 
                     v = util.clamp(v, props.min, props.max)
                     if old ~= v then
-                        crops.dirty.arc = true
+                        -- crops.dirty.arc = true
                         crops.set_state(props.state, v)
                     end
                 end
@@ -162,7 +162,7 @@ do
                     
                     v = props.controlspec:map(util.clamp(v, 0, 1))
                     if old ~= v then
-                        crops.dirty.arc = true
+                        -- crops.dirty.arc = true
                         crops.set_state(props.state, v)
                     end
                 end
@@ -225,7 +225,7 @@ do
  
                     v = util.clamp(v, min, max)
                     if old ~= v then
-                        crops.dirty.arc = true
+                        -- crops.dirty.arc = true
                         crops.set_state(props.state, v)
                     end
                 end

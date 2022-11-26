@@ -27,7 +27,7 @@ do
 
                     local v = z --get the current value based on input received.
 
-                    crops.dirty.grid = true --set the dirty flag for grids high
+                    -- crops.dirty.grid = true --set the dirty flag for grids high
                     crops.set_state(props.state, v) --set the value using the state prop
                 end
             elseif crops.mode == 'redraw' then --if drawing the device output
@@ -69,12 +69,12 @@ do
                         (z == 1 and props.edge == 'rising')
                         or (z == 0 and props.edge == 'falling')
                     then
-                        crops.dirty.grid = true
+                        -- crops.dirty.grid = true
                         crops.set_state(props.state, 1)
 
                         clock.run(function()
                             clock.sleep(props.t)
-                            crops.dirty.grid = true
+                            -- crops.dirty.grid = true
                             crops.set_state(props.state, 0)
                         end)
                     end
@@ -122,7 +122,7 @@ do
                         local v = crops.get_state(props.state) or 0
                         v = (v + 1) % #props.levels
 
-                        crops.dirty.grid = true
+                        -- crops.dirty.grid = true
                         crops.set_state(props.state, v)
                     end
                 end
@@ -291,7 +291,7 @@ do
                     then
                         local v = n
 
-                        crops.dirty.grid = true 
+                        -- crops.dirty.grid = true 
                         crops.set_state(props.state, v) 
                     end
                 end
@@ -341,7 +341,7 @@ do
 
                     local v = z
 
-                    crops.dirty.grid = true 
+                    -- crops.dirty.grid = true 
                     crops.set_state_at(props.state, n, v) 
                 end
             elseif crops.mode == 'redraw' then 
@@ -360,7 +360,7 @@ do
     end
 end
 
--- toggles. values cycle forward from 0-n on keypress. set number of levels with `levels` (multiple keys).
+--toggles. values cycle forward from 0-n on keypress. set number of levels with `levels` (multiple keys).
 do
     --default values for every valid prop.
     local defaults = {
@@ -396,7 +396,7 @@ do
                         local v = crops.get_state_at(props.state, n) or 0
                         v = (v + 1) % #props.levels
 
-                        crops.dirty.grid = true 
+                        -- crops.dirty.grid = true 
                         crops.set_state_at(props.state, n, v) 
                     end
                 end

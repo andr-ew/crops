@@ -169,8 +169,8 @@ function crops.set_state(state, value)
 
     state[2](table.unpack(args))
 end
-function crops.get_state_at(state, i)
-    return state[1][i]
+function crops.get_state_at(state, idx)
+    return state[1][idx]
 end
 function crops.set_state_at(state, idx, value)
     local args = {} --args sent to the state setter function
@@ -182,7 +182,7 @@ function crops.set_state_at(state, idx, value)
 
     local old = state[1]
     local new = {}
-    for i,v in pairs(old) do new[i] = v end
+    for k,v in pairs(old) do new[k] = v end
     new[idx] = value
 
     table.insert(args, new)
