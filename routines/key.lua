@@ -103,7 +103,7 @@ do
     end
 end
 
---number. integer number.
+--number. integer number. uses 1-2 keys.
 do
     local defaults = {
         state = {1},
@@ -126,7 +126,7 @@ do
                 local nxt, prev = n == props.n_next, n == props.n_prev
 
                 if nxt or prev then
-                    props.input(n, z)
+                    props.input(nxt and 2 or 1, z)
 
                     if
                         (z == 1 and props.edge == 'rising')
@@ -150,7 +150,74 @@ do
         end
     end
 end
---momentaries.
---toggles.
+
+local tab = require 'tabutil'
+
+--momentaries. values are high while key is held. 2 keys.
+do
+    --default values for every valid prop.
+    local defaults = {
+        state = {{}},
+        n = { 2, 3 },               --2 key indices, 1-3
+        input = function(n, z) end, --input callback, passes last key state on any input
+    }
+    defaults.__index = defaults
+
+    function _key.momentaries(props)
+        if crops.device == 'key' then 
+            setmetatable(props, defaults) 
+
+            if crops.mode == 'input' then 
+                local n, z = table.unpack(crops.args) 
+                local i = tab.key(props.n, n)
+
+                if i then 
+                    props.input(i, z)
+
+                    local v = z
+
+                    crops.set_state_at(props.state, i, v) 
+                end
+            end
+        end
+    end
+end
+
+--toggles. value cycles 0-1 on keypress. 2 keys.
+do
+    --default values for every valid prop.
+    local defaults = {
+        state = {{}},
+        n = { 2, 3 },               --2 key indices, 1-3
+        input = function(n, z) end, --input callback, passes last key state on any input
+        edge = 'rising',            --the input edge that causes the trigger. 'rising' or 'falling'.
+    }
+    defaults.__index = defaults
+
+    function _key.toggles(props)
+        if crops.device == 'key' then 
+            setmetatable(props, defaults) 
+
+            if crops.mode == 'input' then 
+                local n, z = table.unpack(crops.args) 
+                local i = tab.key(props.n, n)
+
+                if i then 
+                    props.input(i, z)
+
+                    if
+                        (z == 1 and props.edge == 'rising')
+                        or (z == 0 and props.edge == 'falling')
+                    then
+                        local v = crops.get_state_at(props.state, i) or 0
+                        v = v ~ 1
+
+                        crops.set_state_at(props.state, i, v) 
+                    end
+                end
+            end
+        end
+    end
+end
 
 return _key
