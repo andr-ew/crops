@@ -3,12 +3,12 @@ local _screen = {}
 --text. display a single string.
 do
     local defaults = {
-        text = 'abc',
-        x = 10,
-        y = 10,
-        font_face = 1,
-        font_size = 8,
-        level = 15,
+        text = 'abc',            --string to display
+        x = 10,                  --x position
+        y = 10,                  --y position
+        font_face = 1,           --font face
+        font_size = 8,           --font size
+        level = 15,              --brightness level, 0-15
         flow = 'right',          --direction for text to flow: 'left', 'right'
     }
     defaults.__index = defaults
@@ -33,20 +33,19 @@ end
 --list. display a table of strings with 1-2 brightness levels using the focus prop. non-numeric keys are displayed with values
 do
     local defaults = {
-        text = {},
-        x = 10,
-        y = 10,
-        font_face = 1,
-        font_size = 8,
-        margin = 5,
-        levels = { 4, 15 },
-        focus = 2,
+        text = {},               --list of strings to display. non-numeric keys are displayed as labels with thier values. (e.g. { cutoff = value })
+        x = 10,                  --x position
+        y = 10,                  --y position
+        font_face = 1,           --font face
+        font_size = 8,           --font size
+        margin = 5,              --pixel space betweeen list items
+        levels = { 4, 15 },      --table of 2 brightness levels, 0-15
+        focus = 2,               --only this index in the resulting list will have the second brightness level. nil for no focus.
         flow = 'right',          --direction of list to flow: 'up', 'down', 'left', 'right'
-        font_headroom = 3/8,
+        font_headroom = 3/8,     --used to calculate height of letters. might need to adjust for non-default fonts
         -- font_leftroom = 1/16,
     }
     defaults.__index = defaults
-    --tsize = { x = screen.text_extents(txt), y = etc.font_size * (1 - etc.font_headroom) }
 
     function _screen.list(props)
         if crops.device == 'screen' then
@@ -84,6 +83,5 @@ do
         end
     end
 end
-
 
 return _screen
