@@ -1,0 +1,28 @@
+# crops
+
+functional UI component system for norns/grid/arcs
+
+🚧 UNDER CONSTRUCTION 🚧
+
+## anatomy of a garden
+
+```
+_some_routine = include 'lib/routines/some_routine'
+
+local value = 1
+
+local function render()
+    _some_routine{
+        some_prop = 7,
+        state = { 
+          value, 
+          function(v) 
+              value = v 
+              crops.some_device.dirty = true
+          end,
+        }
+    }
+end
+
+crops.connect_some_device(render)
+```
