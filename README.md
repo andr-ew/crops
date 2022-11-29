@@ -1,8 +1,8 @@
-# crops
+# crops (beta)
 
 functional UI component system for norns/grid/arcs
 
-**🚧 UNDER CONSTRUCTION 🚧**
+**🚧 DOCS UNDER CONSTRUCTION 🚧**
 
 ## anatomy of a garden
 
