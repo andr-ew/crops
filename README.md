@@ -16,11 +16,11 @@ local function render()
     _some_routine{
         some_prop = 7,
         state = { 
-          value, 
-          function(v) 
-              value = v 
-              crops.some_device.dirty = true
-          end,
+            value, 
+            function(v) 
+                value = v 
+                crops.some_device.dirty = true
+            end,
         }
     }
 end
