@@ -7,7 +7,8 @@ functional UI component system for norns/grid/arcs
 ## anatomy of a garden
 
 ```
-_some_routine = include 'lib/routines/some_routine'
+include 'lib/crops/core'
+_some_routine = include 'lib/my_routines/some_routine'
 
 local value = 1
 
