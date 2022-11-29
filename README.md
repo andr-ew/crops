@@ -2,7 +2,7 @@
 
 functional UI component system for norns/grid/arcs
 
-🚧 UNDER CONSTRUCTION 🚧
+**🚧 UNDER CONSTRUCTION 🚧**
 
 ## anatomy of a garden
 
