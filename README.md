@@ -1,4 +1,4 @@
-# crops (beta)
+# crops (alpha)
 
 functional UI component system for norns/grid/arcs
 
