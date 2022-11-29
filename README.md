@@ -20,6 +20,7 @@ local function render()
             function(v) 
                 value = v 
                 crops.some_device.dirty = true
+                
                 do_something_with(value)
             end,
         }
