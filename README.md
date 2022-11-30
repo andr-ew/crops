@@ -27,5 +27,7 @@ local function render()
     }
 end
 
-crops.connect_some_device(render)
+function init()
+    crops.connect_some_device(render)
+end
 ```
