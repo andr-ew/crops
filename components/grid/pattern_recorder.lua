@@ -1,5 +1,6 @@
 local default_args = {
-    blink_time = 0.25,
+    flash_time = 0.2,
+    blink_time = 0.2,
 }
 default_args.__index = default_args
 
@@ -20,29 +21,46 @@ local function PatternRecorder(args)
     local downtime = 0
     local lasttime = 0
 
-    local blink = 0
+    local flash = 0
     clock.run(function()
         while true do
             if pattern.rec == 1 or pattern.overdub == 1 then
-                blink = 1
+                flash = 1
                 crops.dirty.grid = true
-                clock.sleep(args.blink_time)
+                clock.sleep(args.flash_time)
 
-                blink = 0
+                flash = 0
                 crops.dirty.grid = true
-                clock.sleep(args.blink_time)
+                clock.sleep(args.flash_time)
             else
-                blink = 0
-                clock.sleep(args.blink_time)
+                flash = 0
+                clock.sleep(args.flash_time)
             end
         end
     end)
 
+    local blink = 0
+    local bclock
+    local function do_blink()
+        clock.sleep(args.blink_time)
+
+        blink = 0
+        crops.dirty.grid = true
+    end
+
     return function(props)
+        local pattern = props.pattern
+
+        if crops.mode == 'input' and (pattern.rec == 1 or pattern.overdub == 1) then
+            blink = 1
+            crops.dirty.grid = true
+
+            if bclock then clock.cancel(bclock) end
+            bclock = clock.run(do_blink)
+        end
+
         if crops.device == 'grid' then
             setmetatable(props, default_props)
-
-            local pattern = props.pattern
 
             if crops.mode == 'input' then
                 local x, y, z = table.unpack(crops.args)
@@ -102,16 +120,16 @@ local function PatternRecorder(args)
                     local off = 0
                     local dim = (props.varibright == false) and 0 or 4
                     local med = (props.varibright == false) and 15 or 4
-                    -- local medhi = (props.varibright == false) and 15 or 8 
+                    local medhi = (props.varibright == false) and 15 or 8 
                     local hi = 15
 
                     local empty = 0
-                    -- local armed = ({ off, med })[blink + 1]
-                    local armed = med
-                    local recording = ({ off, med })[blink + 1]
+                    -- local armed = ({ off, med })[flash + 1]
+                    local armed = ({ off, med })[flash + 1]
+                    local recording = ({ off, medhi })[blink + 1]
                     local playing = hi
                     local paused = dim
-                    local overdubbing = ({ dim, hi })[blink + 1]
+                    local overdubbing = ({ dim, hi })[flash + 1]
 
                     lvl = (
                         pattern.rec==1 and (pattern.data.count>0 and recording or armed)
