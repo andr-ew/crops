@@ -15,6 +15,9 @@ local function ring_range(x1, x2)
     end
 end
 
+_arc.util = {}
+_arc.util.ring_range = ring_range
+
 -- fill. display a set brightness level over a range of keys
 do
     local defaults = {
