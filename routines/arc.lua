@@ -67,7 +67,7 @@ do
     end
 end
 
---number. decimal number + 360 indicator. one full rotation of of the indicator is equal to the value of cycle.
+--decimal. rational/floating point number + 360 indicator. one full rotation of of the indicator is equal to the value of cycle.
 do
     local defaults = {
         state = {0},
@@ -83,7 +83,7 @@ do
     }
     defaults.__index = defaults
 
-    function _arc.number(props)
+    function _arc.decimal(props)
         if crops.device == 'arc' then
             setmetatable(props, defaults)
 
@@ -194,15 +194,17 @@ do
     end
 end
 
---option. integer number + 'tab' display. resulting value must be rounded down (e.g. v//1)
+--integer. an integer number + 'tab' display. fractional remainder after each delta is stored in a separate state.
 do
     local defaults = {
         state = {1},
+        state_remainder = {0.0},
         n = 1,                      --ring index, 1-4
         x = { 33, 33 },             --start & endpoint led indices. table of 2 ints 1-64
         levels = { 4, 15 },         --brightness levels, table of two ints 0-15
         sensitivity = 0.25,         --input sensitivity / incriment for each enc delta
-        options = 4,                --number of tabs / values
+        min = 1,                    --min value
+        max = 4,                    --max value. # of tabs = max - min + 1
         wrap = false,               --wrap value around min/max
         size = nil,                 --number of leds in tabs. nil (auto), single value, or table
         margin = 0,                 --margin between tabs
@@ -217,9 +219,12 @@ do
                 local n, d = table.unpack(crops.args)
 
                 if n == props.n then
-                    local old = crops.get_state(props.state) or 1
+                    local old = math.floor(crops.get_state(props.state) or 1)
+                                + (crops.get_state(props.state_remainder) or 0) 
+
                     local v = old + (d * props.sensitivity)
-                    local min, max = 1, props.options + 1 - props.sensitivity
+                    local min = props.min
+                    local max = props.max + 1 - props.sensitivity
 
                     if props.wrap then
                         while v > max do v = v - (max - min) end
@@ -228,8 +233,10 @@ do
  
                     v = util.clamp(v, min, max)
                     if old ~= v then
-                        -- crops.dirty.arc = true
-                        crops.set_state(props.state, v)
+                        local int, frac = math.modf(v)
+
+                        crops.set_state(props.state, int)
+                        crops.set_state(props.state_remainder, frac)
                     end
                 end
             elseif crops.mode == 'redraw' then
@@ -239,14 +246,14 @@ do
                 local count = props.x[2] - props.x[1]
                 if props.x[1] >= props.x[2] then count = 64 + count end
 
-                local options = props.options
+                local options = props.max - props.min + 1
                 local vr = math.floor(v)
                 local margin = props.margin
                 local stab = type(props.size) == 'table'
                 local size = props.size or (count/options - props.margin)
 
                 local st = 0
-                for i = 1, options do
+                for i = props.min, props.max, 1 do
                     local sel = vr == i
                     local l = sel and 2 or 1
                     local sz = (stab and size[i] or size)

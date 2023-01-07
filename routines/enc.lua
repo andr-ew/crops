@@ -48,7 +48,7 @@ do
                     local old = crops.get_state(props.state) or 1
                     local v = old + (d * props.sensitivity)
                     local min = props.min
-                    local max = props.max + 1 - props.sensitivity
+                    local max = props.max
 
                     if props.wrap then
                         while v > max do v = v - (max - min) end
@@ -71,7 +71,7 @@ do
         state = {1},
         state_remainder = {0.0},
         n = 1,                      --enc index, 1-3(/4)
-        sensitivity = 0.5,          --input sensitivity / incriment for each enc delta
+        sensitivity = 1/4,          --input sensitivity / incriment for each enc delta
         min = 1,                    --min value
         max = 4,                    --max value
         wrap = false,               --wrap value around min/max
@@ -103,7 +103,7 @@ do
                         local int, frac = math.modf(v)
 
                         crops.set_state(props.state, int)
-                        crops.set_state(props.state_remainder, int)
+                        crops.set_state(props.state_remainder, frac)
                     end
                 end
             end
