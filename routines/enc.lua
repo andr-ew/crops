@@ -71,7 +71,7 @@ do
         state = {1},
         state_remainder = {0.0},
         n = 1,                      --enc index, 1-3(/4)
-        sensitivity = 1/4,          --input sensitivity / incriment for each enc delta
+        sensitivity = 1/2,          --input sensitivity / incriment for each enc delta
         min = 1,                    --min value
         max = 4,                    --max value
         wrap = false,               --wrap value around min/max
@@ -89,7 +89,7 @@ do
                     local old = math.floor(crops.get_state(props.state) or 1)
                                 + (crops.get_state(props.state_remainder) or 0) 
 
-                    local v = old + (d * props.sensitivity)
+                    local v = old + ((d > 0 and 1 or -1) * props.sensitivity)
                     local min = props.min
                     local max = props.max + 1 - props.sensitivity
 
