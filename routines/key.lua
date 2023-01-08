@@ -103,7 +103,7 @@ do
     end
 end
 
---number. integer number. uses 1-2 keys.
+--integer. integer number. uses 1-2 keys.
 do
     local defaults = {
         state = {1},
@@ -117,7 +117,7 @@ do
     }
     defaults.__index = defaults
 
-    function _key.number(props)
+    function _key.integer(props)
         if crops.device == 'key' then
             setmetatable(props, defaults)
 

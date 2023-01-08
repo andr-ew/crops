@@ -256,7 +256,7 @@ do
     end
 end
 
--- number. select a number 1-`size` across `size` keys.
+-- integer. select an integer number 1-`size` across `size` keys.
 do
     --default values for every valid prop.
     local defaults = {
@@ -274,7 +274,7 @@ do
     }
     defaults.__index = defaults
 
-    function _grid.number(props)
+    function _grid.integer(props)
         if crops.device == 'grid' then 
             setmetatable(props, defaults) 
 

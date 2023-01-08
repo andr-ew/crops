@@ -211,7 +211,7 @@ do
     }
     defaults.__index = defaults
 
-    function _arc.option(props)
+    function _arc.integer(props)
         if crops.device == 'arc' then
             setmetatable(props, defaults)
 
