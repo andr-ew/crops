@@ -222,6 +222,10 @@ local function xy_to_index(props, x, y)
     end
 end
 
+_grid.util = {}
+_grid.util.index_to_xy = index_to_xy
+_grid.util.xy_to_index = xy_to_index
+
 -- fills. display a set brightness level (multiple keys).
 do
     local defaults = {
