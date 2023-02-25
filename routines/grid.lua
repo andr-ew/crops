@@ -164,7 +164,10 @@ end
 
 --utility: return the x & y position of the Nth key, based on wrap & flow props
 local function index_to_xy(props, n)
-    local flow, flow_wrap = props.flow, props.flow_wrap
+    local flow = props.flow or 'right'
+    local flow_wrap = props.flow_wrap or 'down'
+    local wrap = props.wrap or 16
+    local padding = props.padding or 0
 
     local flows_along_x = (flow=='left') or (flow=='right')
     local flows_incrimentally = {
@@ -174,10 +177,10 @@ local function index_to_xy(props, n)
     local axis_x = flows_along_x and 'main' or 'cross'
     local axis_y = flows_along_x and 'cross' or 'main'
 
-    local distance = n - 1 + props.padding
+    local distance = n - 1 + padding
     local offset = {
-        main = distance % props.wrap,
-        cross = distance // props.wrap,
+        main = distance % wrap,
+        cross = distance // wrap,
     }
 
     local x = flows_incrimentally[axis_x] and props.x + offset[axis_x] or props.x - offset[axis_x]
@@ -188,7 +191,10 @@ end
 
 --utility: return the index of the key, based on x & y position + wrap & flow props. returns nil when out of bounds
 local function xy_to_index(props, x, y)
-    local flow, flow_wrap = props.flow, props.flow_wrap
+    local flow = props.flow or 'right'
+    local flow_wrap = props.flow_wrap or 'down'
+    local wrap = props.wrap or 16
+    local padding = props.padding or 0
 
     local flows_along_x = (flow=='left') or (flow=='right')
     local flows_incrimentally = {
@@ -213,8 +219,8 @@ local function xy_to_index(props, x, y)
         ),
     }
 
-    if in_quad.main and in_quad.cross and math.abs(offset.main) < props.wrap then
-        local n = (math.abs(offset.cross) * props.wrap) + math.abs(offset.main) + 1 - props.padding
+    if in_quad.main and in_quad.cross and math.abs(offset.main) < wrap then
+        local n = (math.abs(offset.cross) * wrap) + math.abs(offset.main) + 1 - padding
 
         if n > 0 and n <= props.size then
             return n
