@@ -167,7 +167,7 @@ function crops.set_state(state, value)
     end
     table.insert(args, value)
 
-    state[2](table.unpack(args))
+    if state[2] then state[2](table.unpack(args)) end
 end
 function crops.get_state_at(state, idx)
     return state[1][idx]
@@ -187,5 +187,5 @@ function crops.set_state_at(state, idx, value)
 
     table.insert(args, new)
 
-    state[2](table.unpack(args))
+    if state[2] then state[2](table.unpack(args)) end
 end
