@@ -20,10 +20,12 @@ local function PatternRecorder(args)
     local downtime = 0
     local lasttime = 0
 
+    local blinking = false
     local blink = 0
+
     clock.run(function()
         while true do
-            if pattern.rec == 1 or pattern.overdub == 1 then
+            if blinking then
                 blink = 1
                 crops.dirty.grid = true
                 clock.sleep(args.blink_time)
@@ -58,25 +60,31 @@ local function PatternRecorder(args)
                             pattern:stop()
                             props.pre_clear()
                             pattern:clear()
+                            blinking = false
                         else
                             if pattern.data.count > 0 then
                                 if tlast < 0.3 then --double-tap to overdub
                                     pattern:resume()
                                     pattern:set_overdub(1)
                                     props.post_rec_start()
+                                    blinking = true
                                 else
                                     if pattern.rec == 1 then --play pattern / stop inital recording
                                         props.pre_rec_stop()
                                         pattern:rec_stop()
                                         pattern:start()
+                                        blinking = false
                                     elseif pattern.overdub == 1 then --stop overdub
                                         props.pre_rec_stop()
                                         pattern:set_overdub(0)
+                                        blinking = false
                                     else
                                         if pattern.play == 0 then --resume pattern
                                             pattern:resume()
+                                            blinking = false
                                         elseif pattern.play == 1 then --pause pattern
                                             pattern:stop() 
+                                            blinking = false
                                         end
                                     end
                                 end
@@ -84,8 +92,10 @@ local function PatternRecorder(args)
                                 if pattern.rec == 0 then --begin initial recording
                                     pattern:rec_start()
                                     props.post_rec_start()
+                                    blinking = true
                                 else
                                     pattern:rec_stop()
+                                    blinking = false
                                 end
                             end
                         end
