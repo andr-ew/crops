@@ -114,15 +114,31 @@ do
                 for k,v in pairs(props.levels) do level_bytes[string.byte(k)] = v end
 
                 local x, y = props.x, props.y
-                for _,byte in ipairs(glyph_bytes) do
-                    if byte == newline_byte then
-                        y = y + 1
-                        x = props.x
-                    elseif level_bytes[byte] then
-                        screen.level(level_bytes[byte])
-                        screen.pixel(x, y)
-                        screen.fill()
-                        x = x + 1
+
+                if props.align == 'left' then
+                    for _,byte in ipairs(glyph_bytes) do
+                        if byte == newline_byte then
+                            y = y + 1
+                            x = props.x
+                        elseif level_bytes[byte] then
+                            screen.level(level_bytes[byte])
+                            screen.pixel(x, y)
+                            screen.fill()
+                            x = x + 1
+                        end
+                    end
+                else
+                    for i = #glyph_bytes, 1, -1 do
+                        local byte = glyph_bytes[i]
+                        if byte == newline_byte then
+                            y = y - 1
+                            x = props.x
+                        elseif level_bytes[byte] then
+                            screen.level(level_bytes[byte])
+                            screen.pixel(x, y)
+                            screen.fill()
+                            x = x - 1
+                        end
                     end
                 end
             end
