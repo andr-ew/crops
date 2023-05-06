@@ -45,6 +45,8 @@ crops.connect_screen = function(render, fps)
     local name = 'screen'
 
     function redraw()
+        -- print('crops redraw()')
+
         screen.clear()
 
         crops.args = nil

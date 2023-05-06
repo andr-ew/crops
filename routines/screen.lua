@@ -9,7 +9,7 @@ do
         font_face = 1,           --font face
         font_size = 8,           --font size
         level = 15,              --brightness level, 0-15
-        flow = 'right',          --direction for text to flow: 'left', 'right'
+        flow = 'right',          --direction for text to flow: 'left', 'right', or 'center'
     }
     defaults.__index = defaults
 
@@ -24,6 +24,7 @@ do
                 screen.move(props.x, props.y)
 
                 if props.flow == 'left' then screen.text_right(props.text)
+                elseif props.flow == 'center' then screen.text_center(props.text)
                 else screen.text(props.text) end
             end
         end
