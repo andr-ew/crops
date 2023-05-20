@@ -1,6 +1,6 @@
 # crops (alpha)
 
-functional UI component system for monome norns (+ grid/arc)
+a functional UI component system for monome norns (+ grid/arc) based on closures.
 
 **🚧 DOCS UNDER CONSTRUCTION 🚧**
 
