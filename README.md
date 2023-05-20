@@ -14,7 +14,7 @@ local funtion My_component()
     local value = 1
     local _render_component = Some_component()
 
-    return function(props)
+    return function()
         _render_component{
             some_prop = 7,
             state = { 
