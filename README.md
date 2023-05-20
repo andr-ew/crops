@@ -8,12 +8,14 @@ functional UI component system for monome norns (+ grid/arc)
 
 ```
 include 'lib/crops/core'
-_some_routine = include 'lib/my_routines/some_routine'
+Some_component = include 'lib/my_components/some_component'
 
 local value = 1
 
+local _render_component = Some_component()
+
 local function render()
-    _some_routine{
+    _render_component{
         some_prop = 7,
         state = { 
             value, 
