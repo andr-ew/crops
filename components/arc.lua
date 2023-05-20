@@ -206,11 +206,10 @@ do
     end
 end
 
---integer. an integer number + 'tab' display. fractional remainder after each delta is stored in a separate state.
+--integer. an integer number + 'tab' display.
 do
     local defaults = {
         state = {1},
-        state_remainder = {0.0},
         n = 1,                      --ring index, 1-4
         x = { 33, 33 },             --start & endpoint led indices. table of 2 ints 1-64
         levels = { 4, 15 },         --brightness levels, table of two ints 0-15
@@ -224,6 +223,8 @@ do
     defaults.__index = defaults
 
     function Arc.integer()
+        local remainder = 0.0
+
         return function(props)
             if crops.device == 'arc' then
                 setmetatable(props, defaults)
@@ -233,7 +234,7 @@ do
 
                     if n == props.n then
                         local old = math.floor(crops.get_state(props.state) or 1)
-                                    + (crops.get_state(props.state_remainder) or 0) 
+                                    + remainder
 
                         local v = old + (d * props.sensitivity)
                         local min = props.min
@@ -249,7 +250,7 @@ do
                             local int, frac = math.modf(v)
 
                             crops.set_state(props.state, int)
-                            crops.set_state(props.state_remainder, frac)
+                            remainder = frac
                         end
                     end
                 elseif crops.mode == 'redraw' then

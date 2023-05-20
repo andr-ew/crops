@@ -69,11 +69,10 @@ do
     end
 end
 
---integer. state is an integer number. fractional remainder after each delta is stored in a separate state.
+--integer. state is an integer number.
 do
     local defaults = {
         state = {1},
-        state_remainder = {0.0},
         n = 1,                      --enc index, 1-3(/4)
         sensitivity = 1/2,          --input sensitivity / incriment for each enc delta
         min = 1,                    --min value
@@ -83,6 +82,8 @@ do
     defaults.__index = defaults
 
     function Enc.integer()
+        local remainder = 0.0
+
         return function(props)
             if crops.device == 'enc' then
                 setmetatable(props, defaults)
@@ -92,7 +93,7 @@ do
 
                     if n == props.n then
                         local old = math.floor(crops.get_state(props.state) or 1)
-                                    + (crops.get_state(props.state_remainder) or 0) 
+                                    + remainder
 
                         local v = old + ((d > 0 and 1 or -1) * props.sensitivity)
                         local min = props.min
@@ -108,7 +109,7 @@ do
                             local int, frac = math.modf(v)
 
                             crops.set_state(props.state, int)
-                            crops.set_state(props.state_remainder, frac)
+                            remainder = frac
                         end
                     end
                 end
