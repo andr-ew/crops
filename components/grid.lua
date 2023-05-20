@@ -1,6 +1,6 @@
--- input & output UI routines for the grid
+-- input & output UI components for the grid
 
-local _grid = {}
+local Grid = {}
 
 -- momentary. value is high while key is held. good starting point for custom grid components.
 do
@@ -14,29 +14,30 @@ do
     }
     defaults.__index = defaults
 
-    --momentary render routine. remember that this function will be called both when the grid accepts input and every time the grid is redrawn. the argument is a table of key/value props. note that most of this function is 'biolerplate'.
-    function _grid.momentary(props)
-        if crops.device == 'grid' then --if the grid device is being processed
-            setmetatable(props, defaults) --use metatables to set default values in the props table
+    function Grid.momentary() --component constructor function. there are no private vars
+        return function(props) --the render loop is returned from the constructor
+                               --remember that this function will be called both when the grid accepts input and every time the grid is redrawn. the argument is a table of key/value props.
+            if crops.device == 'grid' then --if the grid device is being processed
+                setmetatable(props, defaults) --use metatables to set default values in the props table
 
-            if crops.mode == 'input' then --if processing input
-                local x, y, z = table.unpack(crops.args) --assign arguments to local vars
+                if crops.mode == 'input' then --if processing input
+                    local x, y, z = table.unpack(crops.args) --assign arguments to local vars
 
-                if x == props.x and y == props.y then --check if the input overlaps this component
-                    props.input(z) --run the input callback
+                    if x == props.x and y == props.y then --check if the input overlaps this component
+                        local v = z --get the current value based on input received.
 
-                    local v = z --get the current value based on input received.
+                        crops.set_state(props.state, v) --set the value using the state prop
 
-                    -- crops.dirty.grid = true --set the dirty flag for grids high
-                    crops.set_state(props.state, v) --set the value using the state prop
+                        props.input(z) --run the input callback
+                    end
+                elseif crops.mode == 'redraw' then --if drawing the device output
+                    local g = crops.handler --assign the device handler to a local var
+                    local v = crops.get_state(props.state) or 0 --get the value from the state prop
+
+                    local lvl = props.levels[v + 1] --get the correct brightness based on the level prop
+
+                    if lvl>0 then g:led(props.x, props.y, lvl) end --draw the component
                 end
-            elseif crops.mode == 'redraw' then --if drawing the device output
-                local g = crops.handler --assign the device handler to a local var
-                local v = crops.get_state(props.state) or 0 --get the value from the state prop
-
-                local lvl = props.levels[v + 1] --get the correct brightness based on the level prop
-
-                if lvl>0 then g:led(props.x, props.y, lvl) end --draw the component
             end
         end
     end
@@ -55,37 +56,37 @@ do
     }
     defaults.__index = defaults
 
-    function _grid.trigger(props)
-        if crops.device == 'grid' then
-            setmetatable(props, defaults)
+    function Grid.trigger()
+        return function(props)
+            if crops.device == 'grid' then
+                setmetatable(props, defaults)
 
-            if crops.mode == 'input' then
-                local x, y, z = table.unpack(crops.args)
+                if crops.mode == 'input' then
+                    local x, y, z = table.unpack(crops.args)
 
-                if x == props.x and y == props.y then
-                    props.input(z)
+                    if x == props.x and y == props.y then
+                        if
+                            (z == 1 and props.edge == 'rising')
+                            or (z == 0 and props.edge == 'falling')
+                        then
+                            crops.set_state(props.state, 1)
 
-                    if
-                        (z == 1 and props.edge == 'rising')
-                        or (z == 0 and props.edge == 'falling')
-                    then
-                        -- crops.dirty.grid = true
-                        crops.set_state(props.state, 1)
-
-                        clock.run(function()
-                            clock.sleep(props.t)
-                            -- crops.dirty.grid = true
-                            crops.set_state(props.state, 0)
-                        end)
+                            clock.run(function()
+                                clock.sleep(props.t)
+                                crops.set_state(props.state, 0)
+                            end)
+                        end
+                        
+                        props.input(z)
                     end
+                elseif crops.mode == 'redraw' then
+                    local g = crops.handler
+                    local v = crops.get_state(props.state) or 0
+
+                    local lvl = props.levels[v + 1]
+
+                    if lvl>0 then g:led(props.x, props.y, lvl) end
                 end
-            elseif crops.mode == 'redraw' then
-                local g = crops.handler
-                local v = crops.get_state(props.state) or 0
-
-                local lvl = props.levels[v + 1]
-
-                if lvl>0 then g:led(props.x, props.y, lvl) end
             end
         end
     end
@@ -105,34 +106,35 @@ do
     }
     defaults.__index = defaults
 
-    function _grid.toggle(props)
-        if crops.device == 'grid' then
-            setmetatable(props, defaults)
+    function Grid.toggle()
+        return function(props)
+            if crops.device == 'grid' then
+                setmetatable(props, defaults)
 
-            if crops.mode == 'input' then
-                local x, y, z = table.unpack(crops.args)
+                if crops.mode == 'input' then
+                    local x, y, z = table.unpack(crops.args)
 
-                if x == props.x and y == props.y then
-                    props.input(z)
+                    if x == props.x and y == props.y then
+                        if
+                            (z == 1 and props.edge == 'rising')
+                            or (z == 0 and props.edge == 'falling')
+                        then
+                            local v = crops.get_state(props.state) or 0
+                            v = (v + 1) % #props.levels
 
-                    if
-                        (z == 1 and props.edge == 'rising')
-                        or (z == 0 and props.edge == 'falling')
-                    then
-                        local v = crops.get_state(props.state) or 0
-                        v = (v + 1) % #props.levels
+                            crops.set_state(props.state, v)
+                        end
 
-                        -- crops.dirty.grid = true
-                        crops.set_state(props.state, v)
+                        props.input(z)
                     end
+                elseif crops.mode == 'redraw' then
+                    local g = crops.handler
+                    local v = crops.get_state(props.state)
+
+                    local lvl = props.levels[v + 1]
+
+                    if lvl>0 then g:led(props.x, props.y, lvl) end
                 end
-            elseif crops.mode == 'redraw' then
-                local g = crops.handler
-                local v = crops.get_state(props.state)
-
-                local lvl = props.levels[v + 1]
-
-                if lvl>0 then g:led(props.x, props.y, lvl) end
             end
         end
     end
@@ -147,16 +149,18 @@ do
     }
     defaults.__index = defaults
 
-    function _grid.fill(props)
-        if crops.device == 'grid' then
-            setmetatable(props, defaults)
+    function Grid.fill()
+        return function(props)
+            if crops.device == 'grid' then
+                setmetatable(props, defaults)
 
-            if crops.mode == 'redraw' then
-                local g = crops.handler
+                if crops.mode == 'redraw' then
+                    local g = crops.handler
 
-                local lvl = props.level
+                    local lvl = props.level
 
-                if lvl>0 then g:led(props.x, props.y, lvl) end
+                    if lvl>0 then g:led(props.x, props.y, lvl) end
+                end
             end
         end
     end
@@ -228,9 +232,9 @@ local function xy_to_index(props, x, y)
     end
 end
 
-_grid.util = {}
-_grid.util.index_to_xy = index_to_xy
-_grid.util.xy_to_index = xy_to_index
+Grid.util = {}
+Grid.util.index_to_xy = index_to_xy
+Grid.util.xy_to_index = xy_to_index
 
 -- fills. display a set brightness level (multiple keys).
 do
@@ -247,19 +251,21 @@ do
     }
     defaults.__index = defaults
 
-    function _grid.fills(props)
-        if crops.device == 'grid' then
-            setmetatable(props, defaults)
+    function Grid.fills()
+        return function(props)
+            if crops.device == 'grid' then
+                setmetatable(props, defaults)
 
-            if crops.mode == 'redraw' then
-                local g = crops.handler
+                if crops.mode == 'redraw' then
+                    local g = crops.handler
 
-                local lvl = props.level
+                    local lvl = props.level
 
-                for i = 1, props.size do
-                    local x, y = index_to_xy(props, i)
+                    for i = 1, props.size do
+                        local x, y = index_to_xy(props, i)
 
-                    if lvl>0 then g:led(x, y, lvl) end
+                        if lvl>0 then g:led(x, y, lvl) end
+                    end
                 end
             end
         end
@@ -284,37 +290,38 @@ do
     }
     defaults.__index = defaults
 
-    function _grid.integer(props)
-        if crops.device == 'grid' then 
-            setmetatable(props, defaults) 
+    function Grid.integer()
+        return function(props)
+            if crops.device == 'grid' then 
+                setmetatable(props, defaults) 
 
-            if crops.mode == 'input' then 
-                local x, y, z = table.unpack(crops.args) 
-                local n = xy_to_index(props, x, y)
+                if crops.mode == 'input' then 
+                    local x, y, z = table.unpack(crops.args) 
+                    local n = xy_to_index(props, x, y)
 
-                if n then 
-                    props.input(n, z)
+                    if n then 
+                        if
+                            (z == 1 and props.edge == 'rising')
+                            or (z == 0 and props.edge == 'falling')
+                        then
+                            local v = n
 
-                    if
-                        (z == 1 and props.edge == 'rising')
-                        or (z == 0 and props.edge == 'falling')
-                    then
-                        local v = n
-
-                        -- crops.dirty.grid = true 
-                        crops.set_state(props.state, v) 
+                            crops.set_state(props.state, v) 
+                        end
+                        
+                        props.input(n, z)
                     end
-                end
-            elseif crops.mode == 'redraw' then 
-                local g = crops.handler 
+                elseif crops.mode == 'redraw' then 
+                    local g = crops.handler 
 
-                local v = crops.get_state(props.state)
-                for i = 1, props.size do
-                    local lvl = props.levels[(i == v) and 2 or 1] 
+                    local v = crops.get_state(props.state)
+                    for i = 1, props.size do
+                        local lvl = props.levels[(i == v) and 2 or 1] 
 
-                    local x, y = index_to_xy(props, i)
+                        local x, y = index_to_xy(props, i)
 
-                    if lvl>0 then g:led(x, y, lvl) end
+                        if lvl>0 then g:led(x, y, lvl) end
+                    end
                 end
             end
         end
@@ -338,32 +345,33 @@ do
     }
     defaults.__index = defaults
 
-    function _grid.momentaries(props)
-        if crops.device == 'grid' then 
-            setmetatable(props, defaults) 
+    function Grid.momentaries()
+        return function(props)
+            if crops.device == 'grid' then 
+                setmetatable(props, defaults) 
 
-            if crops.mode == 'input' then 
-                local x, y, z = table.unpack(crops.args) 
-                local n = xy_to_index(props, x, y)
+                if crops.mode == 'input' then 
+                    local x, y, z = table.unpack(crops.args) 
+                    local n = xy_to_index(props, x, y)
 
-                if n then 
-                    props.input(n, z)
+                    if n then 
+                        local v = z
 
-                    local v = z
+                        crops.set_state_at(props.state, n, v) 
+                        
+                        props.input(n, z)
+                    end
+                elseif crops.mode == 'redraw' then 
+                    local g = crops.handler 
 
-                    -- crops.dirty.grid = true 
-                    crops.set_state_at(props.state, n, v) 
-                end
-            elseif crops.mode == 'redraw' then 
-                local g = crops.handler 
+                    for i = 1, props.size do
+                        local v = crops.get_state_at(props.state, i) or 0
+                        local lvl = props.levels[v + 1] 
 
-                for i = 1, props.size do
-                    local v = crops.get_state_at(props.state, i) or 0
-                    local lvl = props.levels[v + 1] 
+                        local x, y = index_to_xy(props, i)
 
-                    local x, y = index_to_xy(props, i)
-
-                    if lvl>0 then g:led(x, y, lvl) end
+                        if lvl>0 then g:led(x, y, lvl) end
+                    end
                 end
             end
         end
@@ -390,40 +398,41 @@ do
     }
     defaults.__index = defaults
 
-    function _grid.toggles(props)
-        if crops.device == 'grid' then 
-            setmetatable(props, defaults) 
+    function Grid.toggles()
+        return function(props)
+            if crops.device == 'grid' then 
+                setmetatable(props, defaults) 
 
-            if crops.mode == 'input' then 
-                local x, y, z = table.unpack(crops.args) 
-                local n = xy_to_index(props, x, y)
+                if crops.mode == 'input' then 
+                    local x, y, z = table.unpack(crops.args) 
+                    local n = xy_to_index(props, x, y)
 
-                if n then 
-                    if
-                        (z == 1 and props.edge == 'rising')
-                        or (z == 0 and props.edge == 'falling')
-                    then
-                        local v = crops.get_state_at(props.state, n) or 0
-                        v = (v + 1) % #props.levels
+                    if n then 
+                        if
+                            (z == 1 and props.edge == 'rising')
+                            or (z == 0 and props.edge == 'falling')
+                        then
+                            local v = crops.get_state_at(props.state, n) or 0
+                            v = (v + 1) % #props.levels
 
-                        -- crops.dirty.grid = true 
-                        crops.set_state_at(props.state, n, v) 
+                            crops.set_state_at(props.state, n, v) 
+                        end
                     end
-                end
-            elseif crops.mode == 'redraw' then 
-                local g = crops.handler 
+                elseif crops.mode == 'redraw' then 
+                    local g = crops.handler 
 
-                for i = 1, props.size do
-                    local v = crops.get_state_at(props.state, i) or 0
-                    local lvl = props.levels[v + 1] 
+                    for i = 1, props.size do
+                        local v = crops.get_state_at(props.state, i) or 0
+                        local lvl = props.levels[v + 1] 
 
-                    local x, y = index_to_xy(props, i)
+                        local x, y = index_to_xy(props, i)
 
-                    if lvl>0 then g:led(x, y, lvl) end
+                        if lvl>0 then g:led(x, y, lvl) end
+                    end
                 end
             end
         end
     end
 end
 
-return _grid
+return Grid
