@@ -191,3 +191,10 @@ function crops.set_state_at(state, idx, value)
 
     if state[2] then state[2](table.unpack(args)) end
 end
+
+--globally available 'of' state macros
+function crops.of_param(id)
+    return {
+        params:get(id), params.set, params, id
+    }
+end

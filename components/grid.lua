@@ -287,6 +287,7 @@ do
         flow = 'right',             --primary direction to flow: 'up', 'down', 'left', 'right'
         flow_wrap = 'down',         --direction to flow when wrapping. must be perpendicular to flow
         padding = 0,                --add blank spaces before the first key
+        min = 1,                    --value of lowest key. max = min + size
     }
     defaults.__index = defaults
 
@@ -300,23 +301,23 @@ do
                     local n = xy_to_index(props, x, y)
 
                     if n then 
+                        local v = n + props.min - 1
+
                         if
                             (z == 1 and props.edge == 'rising')
                             or (z == 0 and props.edge == 'falling')
                         then
-                            local v = n
-
                             crops.set_state(props.state, v) 
                         end
                         
-                        props.input(n, z)
+                        props.input(v, z)
                     end
                 elseif crops.mode == 'redraw' then 
                     local g = crops.handler 
 
-                    local v = crops.get_state(props.state)
+                    local n = crops.get_state(props.state) - props.min + 1
                     for i = 1, props.size do
-                        local lvl = props.levels[(i == v) and 2 or 1] 
+                        local lvl = props.levels[(i == n) and 2 or 1] 
 
                         local x, y = index_to_xy(props, i)
 
