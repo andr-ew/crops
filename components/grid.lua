@@ -49,7 +49,7 @@ do
         x = 1,                   --x position of the component
         y = 1,                   --y position of the component
         levels = { 0, 15 },      --brightness levels. expects a table of 2 ints 0-15
-        t = 0.2,                 --trigger time
+        t = 0.1,                 --trigger time
         edge = 'rising',         --the input edge that causes the trigger. 'rising' or 'falling'.
         input = function() end,  --input callback, run on trigger
     }
@@ -78,6 +78,7 @@ do
                             clk = clock.run(function()
                                 clock.sleep(props.t)
                                 blink = 0
+                                crops.dirty.grid = true
                             end)
                         
                             props.input()
