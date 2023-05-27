@@ -46,17 +46,19 @@ end
 -- trigger. value is pinged on keypress for time `t`
 do
     local defaults = {
-        state = {0},
         x = 1,                   --x position of the component
         y = 1,                   --y position of the component
         levels = { 0, 15 },      --brightness levels. expects a table of 2 ints 0-15
         t = 0.2,                 --trigger time
         edge = 'rising',         --the input edge that causes the trigger. 'rising' or 'falling'.
-        input = function(z) end, --input callback, passes key held state on any input
+        input = function() end,  --input callback, run on trigger
     }
     defaults.__index = defaults
 
     function Grid.trigger()
+        local clk
+        local blink = 0
+
         return function(props)
             if crops.device == 'grid' then
                 setmetatable(props, defaults)
@@ -69,21 +71,22 @@ do
                             (z == 1 and props.edge == 'rising')
                             or (z == 0 and props.edge == 'falling')
                         then
-                            crops.set_state(props.state, 1)
+                            if clk then clock.cancel(clk) end
 
-                            clock.run(function()
+                            blink = 1
+
+                            clk = clock.run(function()
                                 clock.sleep(props.t)
-                                crops.set_state(props.state, 0)
+                                blink = 0
                             end)
-                        end
                         
-                        props.input(z)
+                            props.input()
+                        end
                     end
                 elseif crops.mode == 'redraw' then
                     local g = crops.handler
-                    local v = crops.get_state(props.state) or 0
 
-                    local lvl = props.levels[v + 1]
+                    local lvl = props.levels[blink + 1]
 
                     if lvl>0 then g:led(props.x, props.y, lvl) end
                 end
