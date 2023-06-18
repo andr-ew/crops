@@ -193,6 +193,9 @@ function crops.set_state_at(state, idx, value)
 end
 
 --globally available 'of' state macros
+function crops.of_variable(...)
+    return { ... }
+end
 function crops.of_param(id)
     return {
         params:get(id), params.set, params, id
