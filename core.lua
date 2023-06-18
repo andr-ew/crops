@@ -175,10 +175,9 @@ function crops.get_state_at(state, idx)
     return state[1][idx]
 end
 function crops.set_state_at(state, idx, value)
-    local args = {} --args sent to the state setter function
+    local args = {}
 
     for i,v in ipairs(state) do 
-        --additional values in state tab sent as args, before value
         if i > 2 then table.insert(args, v) end
     end
 
@@ -186,6 +185,56 @@ function crops.set_state_at(state, idx, value)
     local new = {}
     for k,v in pairs(old) do new[k] = v end
     new[idx] = value
+
+    table.insert(args, new)
+
+    if state[2] then state[2](table.unpack(args)) end
+end
+function crops.insert_state_at(state, pos_val, value)
+    local args = {}
+
+    for i,v in ipairs(state) do 
+        if i > 2 then table.insert(args, v) end
+    end
+
+    local old = state[1]
+    local new = {}
+    for k,v in pairs(old) do new[k] = v end
+    if value then
+        table.insert(new, pos_val, value)
+    else
+        table.insert(new, pos_val)
+    end
+
+    table.insert(args, new)
+
+    if state[2] then state[2](table.unpack(args)) end
+end
+function crops.remove_state_at(state, pos)
+    local args = {}
+
+    for i,v in ipairs(state) do 
+        if i > 2 then table.insert(args, v) end
+    end
+
+    local old = state[1]
+    local new = {}
+    for k,v in pairs(old) do new[k] = v end
+    table.remove(new, pos)
+
+    table.insert(args, new)
+
+    if state[2] then state[2](table.unpack(args)) end
+end
+function crops.copy_state_from(state, tab)
+    local args = {}
+
+    for i,v in ipairs(state) do 
+        if i > 2 then table.insert(args, v) end
+    end
+
+    local new = {}
+    for k,v in pairs(tab) do new[k] = v end
 
     table.insert(args, new)
 
