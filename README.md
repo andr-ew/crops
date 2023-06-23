@@ -31,7 +31,7 @@ crops.connect_device(render_device, device)
 ```
 crops calls the render function many times. in the case of the grid, it is called every time the grid receives input and when the grid is redrawn – the component closure knows which action to perform in each case. a component may be called with any number of props, passed as a table. these props may change, as they are re-defined each time the render function is called.
 
-note the naming convention – the constructor function is Capitalized, and the component function is preceded by an _underscore. this convention is completely optional, but we’ll be using it throughout these examples.
+note the naming convention – the constructor function is `Capitalized`, and the component function is preceded by an `_underscore`. this convention is completely optional, but we’ll be using it throughout these examples.
 
 ## using components
 ```
