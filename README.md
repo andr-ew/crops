@@ -4,6 +4,7 @@ a functional UI component system for monome norns (+ grid/arc) based on closures
 
 **🚧 DOCS UNDER CONSTRUCTION 🚧**
 - ((examples reflect a few planned API changes that have yet to be implimented))
+- API reference also WIP, but code comments throughout describe most components/props/methods/etc
 
 ## what is a UI component?
 
