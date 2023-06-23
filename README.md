@@ -72,7 +72,7 @@ TODO:
 
 ## the state prop
 
-as mentioned previously, closures’ superpower is the ability to store private, internal data. this has its uses – however – often, we actually do want to be able to access & modify some of the data associated with a component, for example, whether our toggle button is on or off.
+as mentioned previously, closures’ superpower is the ability to store private, internal data. this has its uses – however – often, we actually do want to be able to access & modify some of the data associated with a component externally, for example, whether our toggle button is on or off.
 
 the state prop allows us to do this by defining a state variable outside of a component (and outside the associated render function), then passing it into the component, along with a state setter function. the setter function needs to do 3 things:
 1. assign a new value to our state variable, passed in from the component
