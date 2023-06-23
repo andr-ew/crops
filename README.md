@@ -4,6 +4,8 @@ a functional UI component system for monome norns (+ grid/arc) based on closures
 
 **🚧 DOCS UNDER CONSTRUCTION 🚧**
 - ((examples reflect a few planned API changes that have yet to be implimented))
+    - instead of `crops.grid.dirty()`, use `crops.dirty.grid = true`
+    - `state` is currently required in most components. soon it will be optional.
 - API reference also WIP, but code comments throughout describe most components/props/methods/etc
 
 ## what is a UI component?
