@@ -114,7 +114,7 @@ function render_grid()
 end
 
 crops.connect_grid(render_grid, g)
-``
+```
 as with the last example, we’re able to take some form of action as a result of an input. but unlike before, we can interact with `gate` programmatically, outside of our component:
 - we can check the value of `gate` at any time, just type `gate` in the REPL
 - we can set gate & our component will respond correctly. call `set_gate(1)` & `set_gate(0)` in the REPL – the grid is redrawn & always shows the correct value. 
