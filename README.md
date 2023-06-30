@@ -29,7 +29,7 @@ in crops, a component is a closure that performs redraw and/or input logic for s
 ```
 _component_function = Constructor_function{ arg = 'foo' }
 ```
-the constructor should be called only once, usually when your script first loads. a component constructor may have any number of arguments, passed as a table, and the value of these arguments cannot change.
+the constructor is usually called only once, when your script first loads. a component constructor may have any number of arguments, passed as a table, and the value of these arguments cannot change.
 
 the return value of the constructor function is the component function. after initializing, we render that component by calling the component function within a render function. the render function is passed to crops as a callback:
 ```
