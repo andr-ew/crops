@@ -16,6 +16,13 @@ a UI component is an atomic piece of a user interface that is self-contained, re
 
 simply put, a [closure](https://www.lua.org/pil/6.1.html) is a function returned by another function. what might seem like a strange pattern has many powerful uses in the lua language. closures allow regular functions to continuously manipulate private, “closed in” variables. if you’ve ever used an [anonymous function] as a callback, you’ve likely already used closures without even realizing it.
 
+## getting started
+
+TODO: install options
+- including externally (easiest)
+- copying `crops/`
+- adding a submodule
+
 ## crops components
 
 in crops, a component is a closure that performs redraw and/or input logic for some device — be it grid, arc, or norns’ screen, keys, or encoders. crops ships with a number of simple, but useful, components, and you can also define your own. we can create a new instance of an existing component by calling the constructor function associated with that component:
@@ -35,6 +42,10 @@ crops.connect_device(render_device, device)
 crops calls the render function many times. in the case of the grid, it is called every time the grid receives input and when the grid is redrawn – the component closure knows which action to perform in each case. a component may be called with any number of props, passed as a table. these props may change, as they are re-defined each time the render function is called.
 
 note the naming convention – the constructor function is `Capitalized`, and the component function is preceded by an `_underscore`. this convention is completely optional, but we’ll be using it throughout these examples.
+
+## follow along
+
+TODO: link to a maiden-installable repo with scripts for the examles in each section
 
 ## using components
 ```
