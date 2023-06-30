@@ -270,4 +270,6 @@ crops.connect_grid(render_grid, g)
 
 ## creating device components
 
-(TODO)
+TODO
+- overview of boilerplate & 'copy from components/' strategy
+- optional use of metatables for prop & arg defaults
