@@ -284,3 +284,6 @@ crops.connect_grid(render_grid, g)
 TODO
 - overview of boilerplate & 'copy from components/' strategy
 - optional use of metatables for prop & arg defaults
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbNDI3MTE2ODE0XX0=
+-->
