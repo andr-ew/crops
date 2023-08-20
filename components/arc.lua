@@ -185,17 +185,15 @@ do
      
                     for i, x in ring_range(props.x[1], props.x[2]) do
                         local l = 0
-                        if props.controlspec.warp == 'lin' then
-                            local m = util.linlin(
-                                1, range, props.controlspec.minval, props.controlspec.maxval, i
-                            )
+                        -- if props.controlspec.warp == 'lin' then
+                            local m = props.controlspec:map((i - 1)/range)
                             if i == v then l = 2
                             elseif i > v and m <= 0 then l = 1
                             elseif i < v and m >= 0 then l = 1 end
-                        else
-                            if i == v then l = 2
-                            elseif i < v then l = 1 end
-                        end
+                        -- else
+                        --     if i == v then l = 2
+                        --     elseif i < v then l = 1 end
+                        -- end
                         
                         local lvl = props.levels[l + 1]
                         if lvl>0 then a:led(props.n, x, lvl) end
