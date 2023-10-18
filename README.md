@@ -31,12 +31,14 @@ _component_function = Constructor_function{ arg = 'foo' }
 ```
 the constructor is usually called only once, when your script first loads. a component constructor may have any number of arguments, passed as a table, and the value of these arguments cannot change.
 
-the return value of the constructor function is the component function. after initializing, we render that component by calling the component function within a render function. the render function is passed to crops as a callback:
+the return value of the constructor function is the component function. after initializing, we render that component by calling the component function within a render function:
 ```
 function render_device()
     _component_function{ prop = 'foo' }
 end
-
+```
+then, the render function is passed to crops as a callback:
+```
 crops.connect_device(render_device, device)
 ```
 crops calls the render function many times. in the case of the grid, it is called every time the grid receives input and when the grid is redrawn – the component closure knows which action to perform in each case. a component may be called with any number of props, passed as a table. these props may change, as they are re-defined each time the render function is called.
