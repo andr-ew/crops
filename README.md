@@ -13,9 +13,9 @@ a functional UI component system for monome norns (+ grid/arc) based on closures
 
 ## what is a UI component?
 
-a UI component is an atomic piece of a user interface that is self-contained. a component can define input behavior, display behavior, or both.
+a UI component is an atomic piece of a user interface that is self-contained, reusable, and portable. a component can define input behavior, display behavior, or both.
 
-the primay benefit of component-based design is reusability – a component can be used many different times, in different contexts, without modifying another part of the program. components can also be useful for separating the different concerns of your interface, and keeping larger codebases organized. the declarative, or descriptive, style of working with component libraries can also make it easier to reason about your program, and easier to change details of your interface later on, like changing the width of a slider or its brightness level.
+the primay benefit of component-based design is reusability – a component can be used many different times, in different contexts, without modifying another part of the program. components can also be useful for separating the different concerns of your interface (like hiding private variables), and keeping larger codebases organized. the declarative, or descriptive, style of working with component libraries can also make it easier to reason about your program, and easier to change details of your interface later on, like altering the width of a slider or its brightness level.
 
 conversely, components, as with most any kind of programming abstraction, come with a performance cost, which should be considered when deciding how to structure your program.
 
