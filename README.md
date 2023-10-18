@@ -302,7 +302,7 @@ TODO
 eyJoaXN0b3J5IjpbNDI3MTE2ODE0XX0=
 -->
 
-## distributing the crops library with your scripts
+## distributing the crops library with your script
 
 TODO
 - options:
