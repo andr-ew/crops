@@ -13,18 +13,26 @@ a functional UI component system for monome norns (+ grid/arc) based on closures
 
 ## what is a UI component?
 
-a UI component is an atomic piece of a user interface that is self-contained, reusable, and portable. a component can define input behavior, display behavior, or both.
+a UI component is an atomic piece of a user interface that is self-contained. a component can define input behavior, display behavior, or both.
+
+the primay benefit of component-based design is reusability – a component can be used many different times, in different contexts, without modifying another part of the program. components can also be useful for separating the different concerns of your interface, and keeping larger codebases organized. the declarative, or descriptive, style of working with component libraries can also make it easier to reason about your program, and easier to change details of your interface later on, like changing the width of a slider or its brightness level.
+
+conversely, components, as with most any kind of programming abstraction, come with a performance cost, which should be considered when deciding how to structure your program.
 
 ## what is a closure?
 
 simply put, a [closure](https://www.lua.org/pil/6.1.html) is a function returned by another function. what might seem like a strange pattern has many powerful uses in the lua language. closures allow regular functions to continuously manipulate private, “closed in” variables. if you’ve ever used an [anonymous function] as a callback, you’ve likely already used closures without even realizing it.
 
+## what is crops?
+
+crops is two things. first, it's a light-weight, single file component framework, defined in a couple hundred lines of code in `core.lua`.
+
+second, it's a library of basic components, found in `components/`, that interact with norns' keys, encoders, and screen, as well as the grid and arc. these components were designed to be both useful in basic scripts, but also easy to understand, so they can be used as starting points for creating your own custom components, which you'll learn how to do at the end of this document.
+
 ## getting started
 
 TODO: install options
 - including externally (easiest)
-- copying `crops/`
-- adding a submodule
 
 ## crops components
 
@@ -293,3 +301,10 @@ TODO
 <!--stackedit_data:
 eyJoaXN0b3J5IjpbNDI3MTE2ODE0XX0=
 -->
+
+## distributing the crops library with your scripts
+
+TODO
+- options:
+    - copying `crops/`, easier
+    - adding a submodule, harder, but better
