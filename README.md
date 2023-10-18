@@ -218,7 +218,8 @@ idx:   2
 idx:   3
 ```
 TODO:
-- describe example, ref: https://www.lua.org/pil/6.1.html 
+- describe example, ref: https://www.lua.org/pil/6.1.html
+- description of pure functions – ref: https://react.dev/learn/keeping-components-pure
 - what happens in a closure – stays in a closure ;)
 
 ## creating  group components
