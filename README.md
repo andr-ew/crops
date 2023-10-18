@@ -25,7 +25,7 @@ TODO: install options
 
 ## crops components
 
-in crops, a component is a closure that performs redraw and/or input logic for some device — be it grid, arc, or norns’ screen, keys, or encoders. crops ships with a number of simple, but useful, components, and you can also define your own. we can create a new instance of an existing component by calling the constructor function associated with that component:
+in crops, a component is a closure that performs redraw and/or input logic for some device — be it grid, arc, or norns’ screen, keys, or encoders. crops ships with a number of simple, but useful, components, and you can also define your own. we can create a new instance of a component by calling it's constructor function:
 ```
 _component_function = Constructor_function{ arg = 'foo' }
 ```
