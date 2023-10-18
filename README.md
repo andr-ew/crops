@@ -29,11 +29,6 @@ crops is two things. first, it's a light-weight, single file component framework
 
 second, it's a library of basic components, found in `components/`, that interact with norns' keys, encoders, and screen, as well as the grid and arc. these components were designed to be both useful in basic scripts, but also easy to understand, so they can be used as starting points for creating your own custom components, which you'll learn how to do at the end of this document.
 
-## getting started
-
-TODO: install options
-- including externally (easiest)
-
 ## crops components
 
 in crops, a component is a closure that performs redraw and/or input logic for some device — be it grid, arc, or norns’ screen, keys, or encoders. crops ships with a number of simple, but useful, components, and you can also define your own. we can create a new instance of a component by calling its constructor function:
@@ -55,6 +50,11 @@ crops.connect_device(render_device, device)
 crops calls the render function many times. in the case of the grid, it is called every time the grid receives input and when the grid is redrawn – the component closure knows which action to perform in each case. a component may be called with any number of props, passed as a table. these props may change, as they are re-defined each time the render function is called.
 
 note the naming convention – the constructor function is `Capitalized`, and the component function is preceded by an `_underscore`. this convention is completely optional, but we’ll be using it throughout these examples.
+
+## getting started
+
+TODO: install options
+- including externally (easiest)
 
 ## follow along
 
