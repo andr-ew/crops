@@ -8,6 +8,9 @@ a functional UI component system for monome norns (+ grid/arc) based on closures
     - `state` is currently required in most components. soon it will be optional.
 - API reference also WIP, but code comments throughout describe most components/props/methods/etc
 
+**TODO - genereal:**
+- add gifs for examples w/ [GridCapture](https://github.com/tlubke/GridCapture)
+
 ## what is a UI component?
 
 a UI component is an atomic piece of a user interface that is self-contained, reusable, and portable. a component can define input behavior, display behavior, or both.
