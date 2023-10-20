@@ -19,6 +19,8 @@ the primay benefit of component-based design is reusability – a component can 
 
 conversely, components, as with most any kind of programming abstraction, come with a performance cost, which should be considered when deciding how to structure your program.
 
+though they share little in terms of architecture, crops was inspired heavily by the philosophy of [react](https://react.dev/).
+
 ## what is a closure?
 
 simply put, a [closure](https://www.lua.org/pil/6.1.html) is a function returned by another function. what might seem like a strange pattern has many powerful uses in the lua language. closures allow regular functions to continuously mutate, or manipulate, local, “closed in” variables. if you’ve ever used an [anonymous function] as a callback, you’ve likely already used closures without even realizing it.
