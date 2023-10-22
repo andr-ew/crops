@@ -11,25 +11,23 @@ a functional UI component system for monome norns (+ grid/arc) based on closures
 **TODO - genereal:**
 - add gifs for examples w/ [GridCapture](https://github.com/tlubke/GridCapture)
 
+## what is crops?
+
+crops is two things. first, it's a single file component framework, defined in a couple hundred lines of code in `core.lua`.
+
+second, it's a library of basic components, found in `components/`, that interact with norns' keys, encoders, and screen, as well as the grid and arc. these components were designed to usefully encapsulate commnon interactions, but also be easy to understand, so they can be used as starting points for creating your own custom components, which you'll learn how to do at the end of this document.
+
 ## what is a UI component?
 
 a UI component is an atomic piece of a user interface that is self-contained, reusable, and portable. a component can define input behavior, display behavior, or both.
 
-the primay benefit of component-based design is reusability – a component can be used many different times, in different contexts, without modifying another part of the program. components can also be useful for separating the different concerns of your interface (like hiding private variables), and keeping larger codebases organized. the declarative, or descriptive, style of working with component libraries can also make it easier to reason about your program, and easier to change details of your interface later on, like altering the width of a slider or its brightness level.
+the primay benefit of component-based design is reusability – a component can be used many different times, in different contexts, without modifying another part of the program. components can also be useful for separating the different concerns of your interface (like hiding private variables), and keeping larger codebases organized. the declarative, or descriptive, style of working with component libraries can also make it easier to reason about your program, and easier to change details of your interface later on. though they share little in terms of architecture, crops was inspired heavily by the philosophy of [react](https://react.dev/).
 
-conversely, components, as with most any kind of programming abstraction, come with a performance cost, which should be considered when deciding how to structure your program.
-
-though they share little in terms of architecture, crops was inspired heavily by the philosophy of [react](https://react.dev/).
+conversely, components, as with most any kind of programming abstraction, come with a performance cost, which should be considered when deciding how to structure your program. crops is a library designed by one person to meet their specific needs when it comes to how well UI code should perform, and compromising/defining acceptible levels of latency vs. source code complexity.
 
 ## what is a closure?
 
 simply put, a [closure](https://www.lua.org/pil/6.1.html) is a function returned by another function. what might seem like a strange pattern has many powerful uses in the lua language. closures allow regular functions to continuously mutate, or manipulate, local, “closed in” variables. if you’ve ever used an [anonymous function] as a callback, you’ve likely already used closures without even realizing it.
-
-## what is crops?
-
-crops is two things. first, it's a light-weight, single file component framework, defined in a couple hundred lines of code in `core.lua`.
-
-second, it's a library of basic components, found in `components/`, that interact with norns' keys, encoders, and screen, as well as the grid and arc. these components were designed to be both useful in basic scripts, but also easy to understand, so they can be used as starting points for creating your own custom components, which you'll learn how to do at the end of this document.
 
 ## crops components
 
