@@ -183,7 +183,8 @@ do
 
                     local iv = math.floor(props.controlspec:unmap(v) * range) + 1
                     local i0
-                    if props.controlspec.minval < 0 then 
+                    local mv = props.controlspec.minval
+                    if mv < 0 and mv ~= -math.huge then 
                         i0 = math.floor(props.controlspec:unmap(0) * range) + 1
                     end
                     for i, x in ring_range(props.x[1], props.x[2]) do
