@@ -196,7 +196,6 @@ do
                             if i == iv then l = 2
                             elseif i < iv then l = 1 end
                         end
-                        
                         local lvl = props.levels[l + 1]
                         if lvl>0 then a:led(props.n, x, lvl) end
                     end
