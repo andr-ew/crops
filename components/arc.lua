@@ -181,20 +181,20 @@ do
                     local range = props.x[2] - props.x[1] + 1
                     if props.x[1] >= props.x[2] then range = 64 + range - 1 end
 
-                    v = math.floor(props.controlspec:unmap(v) * range) + 1
-     
+                    local iv = math.floor(props.controlspec:unmap(v) * range) + 1
+                    local i0
+                    if props.controlspec.minval < 0 then 
+                        i0 = math.floor(props.controlspec:unmap(0) * range) + 1
+                    end
                     for i, x in ring_range(props.x[1], props.x[2]) do
                         local l = 0
-                        if props.controlspec.warp == 'lin' then
-                            local m = util.linlin(
-                                1, range, props.controlspec.minval, props.controlspec.maxval, i
-                            )
-                            if i == v then l = 2
-                            elseif i > v and m <= 0 then l = 1
-                            elseif i < v and m >= 0 then l = 1 end
+                        if i0 then
+                            if i == iv then l = 2
+                            elseif i > iv and i <= i0 then l = 1
+                            elseif i < iv and i >= i0 then l = 1 end
                         else
-                            if i == v then l = 2
-                            elseif i < v then l = 1 end
+                            if i == iv then l = 2
+                            elseif i < iv then l = 1 end
                         end
                         
                         local lvl = props.levels[l + 1]
