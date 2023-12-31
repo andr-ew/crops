@@ -185,6 +185,25 @@ function crops.set_state(state, value)
 
     if state[2] then state[2](table.unpack(args)) end
 end
+function crops.delta_state(state, d)
+    local args = {} --args sent to the state setter function
+
+    for i,v in ipairs(state) do 
+        --additional values in state tab sent as args, before value
+        if i > 2 then table.insert(args, v) end
+    end
+    
+    local old = state[1]
+    local new
+    if type(value) == 'table' then
+    else
+        new = old + d
+    end
+
+    table.insert(args, new)
+
+    if state[2] then state[2](table.unpack(args)) end
+end
 function crops.get_state_at(state, idx)
     return state[1][idx]
 end
@@ -202,6 +221,22 @@ function crops.set_state_at(state, idx, value)
     local new = {}
     for k,v in pairs(old) do new[k] = v end
     new[idx] = value
+
+    table.insert(args, new)
+
+    if state[2] then state[2](table.unpack(args)) end
+end
+function crops.delta_state_at(state, idx, d)
+    local args = {}
+
+    for i,v in ipairs(state) do 
+        if i > 2 then table.insert(args, v) end
+    end
+
+    local old = state[1]
+    local new = {}
+    for k,v in pairs(old) do new[k] = v end
+    new[idx] = old[idx] + d
 
     table.insert(args, new)
 
