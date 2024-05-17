@@ -74,6 +74,7 @@ do
                             if clk then clock.cancel(clk) end
 
                             blink = 1
+                            crops.dirty.grid = true
 
                             clk = clock.run(function()
                                 clock.sleep(props.t)
